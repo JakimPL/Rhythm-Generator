@@ -4,6 +4,7 @@ from typing import List, Union
 import abjad
 
 from modules.exceptions import EmptyScoreException, InvalidBeatException
+from modules.misc import lcm, get_duration
 from modules.note import Note
 
 
@@ -43,7 +44,8 @@ def to_abjad_score(score: Union[List[Note], List[List[Note]]], time_signature: (
     if isinstance(score[0], Note):
         score = [score]
     elif not isinstance(score[0], list):
-        raise TypeError('invalid argument, expected list[Note] or list[list[Note]]')
+        raise TypeError('invalid argument, expected list[Note] or list[list[Note]], got {type}'.format(
+            type=type(score[0])))
 
     abjad_signature = abjad.TimeSignature(time_signature)
     staves = []
@@ -58,21 +60,22 @@ def to_abjad_score(score: Union[List[Note], List[List[Note]]], time_signature: (
     return score
 
 
-def validate_notes(notes: List[Note]) -> int:
+def validate_notes(notes: List[Union[int, Note]]) -> int:
     if not notes:
         raise EmptyScoreException('an empty note list')
 
     length = 0
     checkpoints = [0]
-    gcd = math.lcm(*[note.duration for note in notes])
+
+    lengths_lcm = lcm(notes)
     for note in notes:
-        length += gcd // note.duration
+        length += lengths_lcm // get_duration(note)
         checkpoints.append(length)
 
-    validation_set = {gcd * index for index in range(math.ceil(max(checkpoints) / gcd) + 1)}
+    validation_set = {lengths_lcm * index for index in range(math.ceil(max(checkpoints) / lengths_lcm) + 1)}
     checkpoints_set = set(checkpoints)
     difference = validation_set.difference(checkpoints_set)
     if difference:
-        return 1 + min(difference) // gcd
+        return 1 + min(difference) // lengths_lcm
     else:
         return 0

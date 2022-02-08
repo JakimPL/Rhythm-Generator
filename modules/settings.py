@@ -9,10 +9,13 @@ class GroupSettings:
 class Settings:
     def __init__(self):
         self.__time_signature: (int, int) = (4, 4)
-        self.__groups: int = 1
+        self.__groups: int = 2
         self.__measures: int = 2
         self.__default_group_settings: GroupSettings = GroupSettings()
         self.__group_settings: Dict[int, GroupSettings] = {}
+
+    def group_settings(self, group_id: int) -> GroupSettings:
+        return self.__group_settings[group_id] if group_id in self.__group_settings else self.__default_group_settings
 
     @property
     def time_signature(self) -> (int, int):
