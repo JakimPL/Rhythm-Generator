@@ -6,6 +6,9 @@ from abjad.persist import as_png
 
 
 def create_directory() -> str:
+    if not os.path.isdir('../temp'):
+        os.mkdir('../temp')
+
     uid = uuid.uuid4()
     directory = 'temp/{uuid}'.format(uuid=uid)
     os.mkdir(directory)

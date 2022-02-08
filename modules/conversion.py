@@ -3,15 +3,15 @@ from typing import List, Union
 
 import abjad
 
-from exceptions import EmptyScoreException, InvalidBeatException
-from note import Note
+from modules.exceptions import EmptyScoreException, InvalidBeatException
+from modules.note import Note
 
 
 def to_note(note: int) -> Note:
     if note == 0:
         raise ValueError('a note duration must be a non-zero integer')
 
-    return Note(abs(note), note < 0)
+    return Note(duration=abs(note), pause=(note < 0))
 
 
 def to_notes(score: Union[List[int], List[List[int]]]) -> List[List[Note]]:
@@ -32,7 +32,7 @@ def to_abjad_string(notes: List[Note]) -> str:
         raise InvalidBeatException('invalid beat no. {beat}'.format(beat=invalid_beat))
     abjad_string = ""
     for note in notes:
-        abjad_string += '{type}{duration}'.format(type='p' if note.pause else 'c', duration=note.duration)
+        abjad_string += '{type}{duration}'.format(type='r' if note.pause else 'c', duration=note.duration)
     return abjad_string
 
 
