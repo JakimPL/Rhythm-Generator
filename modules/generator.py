@@ -5,7 +5,7 @@ from typing import List
 import abjad
 
 from modules.conversion import to_notes, to_abjad_score
-from modules.misc import get_length
+from modules.misc import get_length, flatten
 from modules.settings import Settings
 
 
@@ -35,22 +35,25 @@ class RhythmGenerator:
 
         length = 0
         remainder = lcm
-        measure = []
+        elements = []
         while remainder:
             possible_phrases = [phrase for phrase in phrases if sum(list(map(abs, phrase))) <= remainder]
             possible_notes = [note for note in notes if abs(note) <= remainder]
+
             choice = random.choice(possible_phrases + possible_notes)
             if isinstance(choice, int):
                 length += abs(choice)
-                measure.append(lcm // choice)
+                elements.append(lcm // choice)
             elif isinstance(choice, list):
                 length += sum(list(map(abs, choice)))
-                measure += [lcm // note for note in choice]
+                elements.append([lcm // note for note in choice])
             else:
                 raise TypeError('expected int or list[int], got {type}'.format(type=type(choice)))
 
             remainder = lcm - length
 
+        random.shuffle(elements)
+        measure = flatten(elements)
         return measure
 
     def __generate_group(self, group_id: int) -> List[int]:

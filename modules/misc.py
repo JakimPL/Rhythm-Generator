@@ -10,6 +10,11 @@ from modules.note import Note
 from modules.phrase_length import PhraseLength
 
 
+def check_type(obj, obj_type):
+    if not isinstance(obj, obj_type):
+        raise TypeError('expected {}, got {}'.format(obj_type.__name__, type(obj_type)))
+
+
 def create_directory() -> str:
     if not os.path.isdir('../temp'):
         os.mkdir('../temp')
@@ -45,6 +50,19 @@ def get_length(notes: List[Union[int, Note]]) -> PhraseLength:
     lengths_lcm = lcm(notes)
     length = sum([lengths_lcm // get_duration(note) for note in notes])
     return PhraseLength(lengths_lcm, length)
+
+
+def flatten(notes: List[Union[int, List[int]]]) -> List[int]:
+    series = []
+    for element in notes:
+        if isinstance(element, int):
+            series.append(element)
+        elif isinstance(element, list):
+            series += element
+        else:
+            raise TypeError('expected int or list[int], got {type}'.format(type=type(element)))
+
+    return series
 
 
 def lcm(notes: List[Union[int, Note]]) -> int:

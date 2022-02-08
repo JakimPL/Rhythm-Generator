@@ -1,9 +1,13 @@
+from dataclasses import dataclass
 from typing import List, Dict
 
+from modules.misc import check_type
 
+
+@dataclass
 class GroupSettings:
-    notes: List[int] = [-8, -4, -2, 1, 2, 4, 8]
-    phrases: List[List[int]] = [[4, -4], [-4, 4], [8, 8, 8, 8], [4, 4]]
+    notes: List[int]
+    phrases: List[List[int]]
 
 
 class Settings:
@@ -11,11 +15,18 @@ class Settings:
         self.__time_signature: (int, int) = (4, 4)
         self.__groups: int = 2
         self.__measures: int = 2
-        self.__default_group_settings: GroupSettings = GroupSettings()
         self.__group_settings: Dict[int, GroupSettings] = {}
+        self.__default_group_settings: GroupSettings = GroupSettings(
+            notes=[-8, -4, -2, 2, 4, 8],
+            phrases=[[4, -4], [-4, 4], [8, 8, 8, 8], [4, 4]]
+        )
 
     def group_settings(self, group_id: int) -> GroupSettings:
         return self.__group_settings[group_id] if group_id in self.__group_settings else self.__default_group_settings
+
+    def set_group(self, group_id: int, group_settings: GroupSettings):
+        check_type(group_settings, GroupSettings)
+        self.__group_settings[group_id] = group_settings
 
     @property
     def time_signature(self) -> (int, int):
@@ -38,8 +49,7 @@ class Settings:
 
     @groups.setter
     def groups(self, groups: int):
-        if not isinstance(groups, int):
-            raise TypeError('expected int, got {type}'.format(type=type(groups)))
+        check_type(groups, int)
 
         if groups <= 0:
             raise ValueError('number of groups cannot be non-positive, got {value}'.format(value=groups))
@@ -52,10 +62,20 @@ class Settings:
 
     @measures.setter
     def measures(self, measures: int):
-        if not isinstance(measures, int):
-            raise TypeError('expected int, got {type}'.format(type=type(measures)))
+        check_type(measures, int)
 
         if measures <= 0:
             raise ValueError('number of measures cannot be non-positive, got {value}'.format(value=measures))
 
         self.__measures = measures
+
+    @property
+    def default_group_settings(self) -> GroupSettings:
+        return self.__default_group_settings
+
+    @default_group_settings.setter
+    def default_group_settings(self, group_settings: GroupSettings):
+        if not isinstance(group_settings, GroupSettings):
+            raise TypeError('expected GroupSettings object, got {type}'.format(type=type(group_settings)))
+
+        self.__default_group_settings = group_settings
