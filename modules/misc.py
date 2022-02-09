@@ -1,13 +1,8 @@
-import math
 import os
 import uuid
-from typing import List, Union
 
 from IPython.core.display import Image
 from abjad.persist import as_png
-
-from modules.note import Note
-from modules.phrase_length import PhraseLength
 
 
 def check_type(obj, obj_type):
@@ -35,35 +30,3 @@ def save_score(score) -> str:
 def show_score(score):
     image_path = save_score(score)
     return Image(url=image_path, unconfined=True)
-
-
-def get_duration(note: Union[int, Note]):
-    if isinstance(note, int):
-        return abs(note)
-    elif isinstance(note, Note):
-        return note.duration
-    else:
-        raise TypeError('expected int or Note, got {type}'.format(type=type(note)))
-
-
-def get_length(notes: List[Union[int, Note]]) -> PhraseLength:
-    lengths_lcm = lcm(notes)
-    length = sum([lengths_lcm // get_duration(note) for note in notes])
-    return PhraseLength(lengths_lcm, length)
-
-
-def flatten(notes: List[Union[int, List[int]]]) -> List[int]:
-    series = []
-    for element in notes:
-        if isinstance(element, int):
-            series.append(element)
-        elif isinstance(element, list):
-            series += element
-        else:
-            raise TypeError('expected int or list[int], got {type}'.format(type=type(element)))
-
-    return series
-
-
-def lcm(notes: List[Union[int, Note]]) -> int:
-    return math.lcm(*[get_duration(note) for note in notes])
