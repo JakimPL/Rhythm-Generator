@@ -1,6 +1,14 @@
-class InvalidBeatException(Exception):
+class LilyException(Exception):
     pass
 
 
-class EmptyScoreException(Exception):
+class InvalidBeatException(LilyException):
+    pass
+
+
+class EmptyScoreException(LilyException):
+    pass
+
+
+class NoteNotSupportedError(LilyException):
     pass

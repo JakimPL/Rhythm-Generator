@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from fractions import Fraction
 from typing import Tuple, Union
 
+from modules.exceptions import NoteNotSupportedError
+
 
 @dataclass
 class Note:
@@ -29,9 +31,44 @@ class Note:
         else:
             raise TypeError('expected int, tuple[int, int] or Fraction, got {type}'.format(type=type(argument)))
 
+        if not self.validate():
+            raise NoteNotSupportedError('note {note} is not supported'.format(note=self.duration))
+
     def __repr__(self):
-        # partially implemented
-        return "{type}{length}".format(type='r' if self.pause else 'c', length=self.duration.denominator)
+        numerator, denominator, dots = self.dots
+        string = "{type}{length}{dotted}".format(
+            type='r' if self.pause else 'c',
+            length=denominator,
+            dotted='.' * dots
+        )
+
+        return string
+
+    def validate(self) -> bool:
+        numerator, denominator, dots = self.dots
+        if numerator != 1:
+            return False
+        if denominator == 0:
+            return False
+
+        while denominator != 1:
+            if denominator % 2:
+                return False
+            denominator //= 2
+
+        return True
+
+    @property
+    def dots(self) -> (int, int, int):
+        numerator = self.duration.numerator
+        denominator = self.duration.denominator
+        dots = 0
+        while numerator % 3 == 0 and denominator % 2 == 0:
+            numerator //= 3
+            denominator //= 2
+            dots += 1
+
+        return numerator, denominator, dots
 
 
 NoteType = Union[int, Tuple[int, int], Note]
