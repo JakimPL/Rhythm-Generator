@@ -46,7 +46,8 @@ class Phrase:
             checkpoints.append(total_length)
 
         time_signature_fraction = Fraction(*time_signature)
-        validation_set = {time_signature_fraction * index for index in range(math.ceil(total_length) + 1)}
+        validation_set = {index * time_signature_fraction for index in range(
+            math.ceil(total_length / time_signature_fraction) + 1)}
         checkpoints_set = set(checkpoints)
         difference = validation_set.difference(checkpoints_set)
 
