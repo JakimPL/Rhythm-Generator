@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from modules.misc import check_type
+from modules.misc import check_type, is_power_of_two
 from modules.note import Note
 from modules.phrase import Phrase, PhraseType
 from modules.time_signature import TimeSignatureType
@@ -14,16 +14,32 @@ class GroupSettings:
 
     def __init__(self, notes: PhraseType = None, phrases: List[PhraseType] = None):
         if notes:
-            self.notes = list(map(Note, notes))
+            self.__notes = list(map(Note, notes))
 
         if phrases:
-            self.phrases = [Phrase(phrase) for phrase in phrases]
+            self.__phrases = [Phrase(phrase) for phrase in phrases]
 
         if not self.get_all_phrases():
             raise ValueError('notes and phrases cannot be both empty')
 
     def get_all_phrases(self) -> List[Phrase]:
-        return [Phrase([note]) for note in self.notes] + self.phrases
+        return [Phrase([note]) for note in self.__notes] + self.__phrases
+
+    @property
+    def notes(self) -> List[Note]:
+        return self.__notes
+
+    @notes.setter
+    def notes(self, notes: list):
+        self.__notes = list(map(Note, notes))
+
+    @property
+    def phrases(self) -> List[Phrase]:
+        return self.__phrases
+
+    @phrases.setter
+    def phrases(self, phrases: list):
+        self.__phrases = list(map(Phrase, phrases))
 
 
 class Settings:
@@ -56,6 +72,9 @@ class Settings:
 
         if not all([element > 0 for element in signature]):
             raise ValueError('non-positive element in a signature: {}'.format(signature))
+
+        if not is_power_of_two(signature[1]):
+            raise ValueError('time signature denominator has to be a power of two')
 
         self.__time_signature = signature
 

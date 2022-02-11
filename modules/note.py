@@ -3,6 +3,7 @@ from fractions import Fraction
 from typing import Tuple, Union
 
 from modules.exceptions import NoteNotSupportedError
+from modules.misc import is_power_of_two
 
 
 @dataclass
@@ -51,12 +52,7 @@ class Note:
         if denominator == 0:
             return False
 
-        while denominator != 1:
-            if denominator % 2:
-                return False
-            denominator //= 2
-
-        return True
+        return is_power_of_two(denominator)
 
     @property
     def dots(self) -> (int, int, int):

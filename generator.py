@@ -1,17 +1,19 @@
 import random
+from fractions import Fraction
 from typing import List
 
 import abjad
 
-from modules.conversion import to_abjad_score
-from modules.phrase import Phrase
-from modules.settings import Settings
+from lily.modules.conversion import to_abjad_score
+from lily.modules.exceptions import InvalidPhraseSetError
+from lily.modules.phrase import Phrase
+from lily.modules.settings import Settings
 
 
 class RhythmGenerator:
     def __init__(self):
         self.settings: Settings = Settings()
-        self.__cache: []
+        self.__cache: None
 
     def __call__(self) -> abjad.Score:
         self.__cache = self.__generate_score()
@@ -21,10 +23,13 @@ class RhythmGenerator:
         group_settings = self.settings.group_settings(group_id)
         phrases = group_settings.get_all_phrases()
 
-        remainder = 1
+        remainder = Fraction(*self.settings.time_signature)
         elements = []
         while remainder:
             possible_phrases = [phrase for phrase in phrases if phrase.length <= remainder]
+            if not possible_phrases:
+                raise InvalidPhraseSetError('invalid set of notes/phrases')
+
             choice = random.choice(possible_phrases)
             elements.append(choice)
             length = choice.length

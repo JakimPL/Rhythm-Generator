@@ -12,3 +12,7 @@ class EmptyScoreException(LilyException):
 
 class NoteNotSupportedError(LilyException):
     pass
+
+
+class InvalidPhraseSetError(LilyException):
+    pass
