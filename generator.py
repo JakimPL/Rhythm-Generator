@@ -4,10 +4,11 @@ from typing import List
 
 import abjad
 
-from lily.modules.conversion import to_abjad_score
-from lily.modules.exceptions import InvalidPhraseSetError
-from lily.modules.phrase import Phrase
-from lily.modules.settings import Settings
+from modules import misc
+from modules.conversion import to_abjad_score
+from modules.exceptions import InvalidPhraseSetError
+from modules.phrase import Phrase
+from modules.settings import Settings
 
 
 class RhythmGenerator:
@@ -24,12 +25,13 @@ class RhythmGenerator:
         phrases = group_settings.get_all_phrases()
 
         remainder = Fraction(*self.settings.time_signature)
+        validation_message = self.__validate(phrases, remainder)
+        if validation_message:
+            raise InvalidPhraseSetError('invalid set of notes/phrases, {message}'.format(message=validation_message))
+
         elements = []
         while remainder:
             possible_phrases = [phrase for phrase in phrases if phrase.length <= remainder]
-            if not possible_phrases:
-                raise InvalidPhraseSetError('invalid set of notes/phrases')
-
             choice = random.choice(possible_phrases)
             elements.append(choice)
             length = choice.length
@@ -44,6 +46,21 @@ class RhythmGenerator:
 
     def __generate_score(self) -> List[Phrase]:
         return [self.__generate_group(group_id) for group_id in range(self.settings.groups)]
+
+    @staticmethod
+    def __validate(phrases: List[Phrase], remainder: Fraction) -> str:
+        gcd = Fraction(
+            misc.gcd([phrase.length.numerator for phrase in phrases] + [remainder.numerator]),
+            misc.lcm([phrase.length.denominator for phrase in phrases] + [remainder.denominator])
+        )
+
+        min_length = min([phrase.length for phrase in phrases])
+        if min_length > gcd:
+            return 'missing notes of length {length}'.format(length=gcd)
+        elif min_length > remainder:
+            return 'too long notes, required a note of length {length}'.format(length=remainder)
+
+        return ''
 
     @staticmethod
     def __flatten(phrases: List[Phrase]) -> Phrase:

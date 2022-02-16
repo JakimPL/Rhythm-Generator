@@ -1,8 +1,27 @@
 import os
 import uuid
+from typing import List, Callable
 
 import abjad
 from IPython.core.display import Image
+
+import math
+
+
+def func(integers: List[int], f: Callable) -> int:
+    value = integers[0]
+    for integer in integers:
+        value = f(value, integer)
+
+    return value
+
+
+def gcd(integers: List[int]) -> int:
+    return func(integers, math.gcd)
+
+
+def lcm(integers: List[int]):
+    return func(integers, lambda x, y: x * y // math.gcd(x, y))
 
 
 def is_power_of_two(value: int) -> bool:

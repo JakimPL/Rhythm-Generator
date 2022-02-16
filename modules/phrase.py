@@ -51,10 +51,7 @@ class Phrase:
         checkpoints_set = set(checkpoints)
         difference = validation_set.difference(checkpoints_set)
 
-        if difference:
-            return int(min(difference) / time_signature_fraction)
-        else:
-            return 0
+        return int(min(difference) / time_signature_fraction) if difference else 0
 
     @property
     def length(self):
