@@ -12,8 +12,8 @@ from modules.settings import Settings
 
 
 class RhythmGenerator:
-    def __init__(self):
-        self.settings: Settings = Settings()
+    def __init__(self, settings: Settings = None):
+        self.settings = settings if settings is not None else Settings()
         self.__cache: None
 
     def __call__(self) -> abjad.Score:

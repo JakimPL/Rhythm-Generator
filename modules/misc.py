@@ -51,9 +51,11 @@ def create_directory() -> str:
     return directory
 
 
-def save_score(score: abjad.Score, **kwargs) -> str:
-    directory = create_directory()
-    path = '{directory}/score.png'.format(directory=directory)
+def save_score(score: abjad.Score, path: str = None, **kwargs) -> str:
+    if path is None:
+        directory = create_directory()
+        path = '{directory}/score.png'.format(directory=directory)
+
     try:
         abjad.persist.as_png(score, path, **kwargs)
     except AttributeError:
