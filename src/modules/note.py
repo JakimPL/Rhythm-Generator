@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from fractions import Fraction
 from typing import Tuple, Union
 
-from modules.exceptions import NoteNotSupportedError
-from modules.misc import is_power_of_two
+from exceptions import NoteNotSupportedError
+from misc import is_power_of_two
 
 
 @dataclass

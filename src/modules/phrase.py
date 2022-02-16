@@ -3,10 +3,10 @@ from dataclasses import dataclass
 from fractions import Fraction
 from typing import List, Union
 
-from modules.exceptions import EmptyScoreException
-from modules.misc import check_type
-from modules.note import Note, NoteType
-from modules.time_signature import TimeSignatureType
+from exceptions import EmptyScoreException
+from misc import check_type
+from note import Note, NoteType
+from time_signature import TimeSignatureType
 
 
 @dataclass

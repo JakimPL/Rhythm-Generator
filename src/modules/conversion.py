@@ -2,9 +2,9 @@ from typing import List
 
 import abjad
 
-from modules.exceptions import EmptyScoreException, InvalidBeatException
-from modules.phrase import Phrase
-from modules.time_signature import TimeSignatureType
+from exceptions import EmptyScoreException, InvalidBeatException
+from phrase import Phrase
+from time_signature import TimeSignatureType
 
 
 def to_abjad_string(phrase: Phrase, time_signature: TimeSignatureType = (4, 4)) -> str:

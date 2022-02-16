@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from modules.misc import check_type, is_power_of_two
-from modules.note import Note
-from modules.phrase import Phrase, PhraseType
-from modules.time_signature import TimeSignatureType
+from misc import check_type, is_power_of_two
+from note import Note
+from phrase import Phrase, PhraseType
+from time_signature import TimeSignatureType
 
 
 @dataclass
