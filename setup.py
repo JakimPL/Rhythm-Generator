@@ -18,5 +18,5 @@ setuptools.setup(
     ],
     python_requires='>=3.8',
     py_modules=["rhygen"],
-    package_dir={'':'quicksample/src'},
+    package_dir={"": "src"},
 )
