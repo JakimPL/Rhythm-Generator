@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from misc import check_type, is_power_of_two
-from note import Note
-from phrase import Phrase, PhraseType
-from time_signature import TimeSignatureType
+from rhygen.modules.misc import check_type, is_power_of_two
+from rhygen.modules.note import Note
+from rhygen.modules.phrase import Phrase, PhraseType
+from rhygen.modules.time_signature import TimeSignatureType
 
 
 @dataclass

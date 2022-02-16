@@ -3,10 +3,10 @@ from dataclasses import dataclass
 from fractions import Fraction
 from typing import List, Union
 
-from exceptions import EmptyScoreException
-from misc import check_type
-from note import Note, NoteType
-from time_signature import TimeSignatureType
+from rhygen.modules.exceptions import EmptyScoreException
+from rhygen.modules.misc import check_type
+from rhygen.modules.note import Note, NoteType
+from rhygen.modules.time_signature import TimeSignatureType
 
 
 @dataclass
