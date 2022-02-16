@@ -1,18 +1,18 @@
-class Rhygen(Exception):
+class RhygenException(Exception):
     pass
 
 
-class InvalidBeatException(Rhygen):
+class InvalidBeatException(RhygenException):
     pass
 
 
-class EmptyScoreException(Rhygen):
+class EmptyScoreException(RhygenException):
     pass
 
 
-class NoteNotSupportedError(Rhygen):
+class NoteNotSupportedError(RhygenException):
     pass
 
 
-class InvalidPhraseSetError(Rhygen):
+class InvalidPhraseSetError(RhygenException):
     pass
