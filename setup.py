@@ -10,11 +10,11 @@ setuptools.setup(
     description="A simple rhythm score generator using abjad package and lilypond",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(include=["rhygen", "generator.py"]),
     license="GNU General Public License v3.0",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
     ],
-    python_requires='>=3.8',
+    python_requires=">=3.8"
 )
