@@ -3,5 +3,7 @@
 __pycache__/
 temp/
 
+*.egg-info/
+
 *.png
 *.pyc

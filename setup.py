@@ -17,6 +17,4 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
     ],
     python_requires='>=3.8',
-    py_modules=["rhygen"],
-    package_dir={"": "src"},
 )
