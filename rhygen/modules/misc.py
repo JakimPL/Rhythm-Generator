@@ -1,11 +1,8 @@
+import math
 import os
-import uuid
 from typing import List, Callable
 
 import abjad
-from IPython.core.display import Image
-
-import math
 
 
 def func(integers: List[int], f: Callable) -> int:
@@ -41,20 +38,11 @@ def check_type(obj, obj_type):
         raise TypeError('expected {}, got {}'.format(obj_type.__name__, type(obj_type)))
 
 
-def create_directory() -> str:
-    if not os.path.isdir('temp'):
-        os.mkdir('temp')
+def save_score(score: abjad.Score, directory: str = None, **kwargs) -> str:
+    if directory is None:
+        directory = os.getcwd()
 
-    uid = uuid.uuid4()
-    directory = 'temp/{uuid}'.format(uuid=uid)
-    os.mkdir(directory)
-    return directory
-
-
-def save_score(score: abjad.Score, path: str = None, **kwargs) -> str:
-    if path is None:
-        directory = create_directory()
-        path = '{directory}/score.png'.format(directory=directory)
+    path = '{directory}/score.png'.format(directory=directory)
 
     try:
         abjad.persist.as_png(score, path, **kwargs)
@@ -68,5 +56,6 @@ def save_score(score: abjad.Score, path: str = None, **kwargs) -> str:
 
 
 def show_score(score: abjad.Score, **kwargs):
+    from IPython.core.display import Image
     image_path = save_score(score, **kwargs)
     return Image(url=image_path, unconfined=True)
