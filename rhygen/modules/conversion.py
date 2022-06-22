@@ -1,6 +1,5 @@
-from typing import List
-
 import abjad
+from typing import List
 
 from rhygen.modules.exceptions import EmptyScoreException, InvalidBeatException
 from rhygen.modules.phrase import Phrase

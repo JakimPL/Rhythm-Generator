@@ -1,8 +1,7 @@
+import abjad
 import math
 import os
 from typing import List, Callable
-
-import abjad
 
 
 def func(integers: List[int], f: Callable) -> int:

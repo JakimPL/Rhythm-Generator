@@ -1,8 +1,7 @@
+import abjad
 import random
 from fractions import Fraction
 from typing import List
-
-import abjad
 
 from rhygen.modules import misc
 from rhygen.modules.conversion import to_abjad_score
