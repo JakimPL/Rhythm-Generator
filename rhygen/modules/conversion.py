@@ -1,5 +1,6 @@
-import abjad
 from typing import List
+
+import abjad
 
 from rhygen.modules.exceptions import EmptyScoreException, InvalidBeatException
 from rhygen.modules.phrase import Phrase
@@ -17,14 +18,17 @@ def to_abjad_string(phrase: Phrase, time_signature: TimeSignatureType = (4, 4)) 
     return abjad_string
 
 
-def to_abjad_score(score: List[Phrase], time_signature: TimeSignatureType = (4, 4)) -> abjad.Score:
+def to_abjad_score(score: List[Phrase], time_signature: TimeSignatureType = (4, 4), tempo: int = 120) -> abjad.Score:
     if not score:
         raise EmptyScoreException('an empty score')
 
     abjad_signature = abjad.TimeSignature(time_signature)
+    abjad_tempo = abjad.MetronomeMark((1, 4), tempo)
+
     staves = []
     for notes in score:
         voice = abjad.Voice(to_abjad_string(notes, time_signature=time_signature), name='Rhythm')
+        abjad.attach(abjad_tempo, voice[0])
         abjad.attach(abjad_signature, voice[0])
         staff = abjad.Staff([voice], lilypond_type='RhythmicStaff', name='Percussion')
         staff_group = abjad.StaffGroup([staff])
