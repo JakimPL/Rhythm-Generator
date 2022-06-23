@@ -1,8 +1,5 @@
 import math
-import os
 from typing import List, Callable
-
-import abjad
 
 
 def func(integers: List[int], f: Callable) -> int:
@@ -36,36 +33,3 @@ def is_power_of_two(value: int) -> bool:
 def check_type(obj, obj_type):
     if not isinstance(obj, obj_type):
         raise TypeError('expected {}, got {}'.format(obj_type.__name__, type(obj_type)))
-
-
-def save_score(score: abjad.Score, directory: str = None, **kwargs) -> str:
-    if directory is None:
-        directory = os.getcwd()
-
-    path = '{directory}/score.png'.format(directory=directory)
-
-    try:
-        abjad.persist.as_png(score, path, **kwargs)
-    except AttributeError:
-        pass
-
-    if 'flags' in kwargs and '-dcrop' in kwargs['flags']:
-        path = path[:-4] + '.cropped.png'
-
-    return path
-
-
-def export_midi(score: abjad.Score, directory: str = None, **kwargs) -> str:
-    if directory is None:
-        directory = os.getcwd()
-
-    path = '{directory}/score.mid'.format(directory=directory)
-    abjad.persist.as_midi(score, path, **kwargs)
-
-    return path
-
-
-def show_score(score: abjad.Score, **kwargs):
-    from IPython.core.display import Image
-    image_path = save_score(score, **kwargs)
-    return Image(url=image_path, unconfined=True)
