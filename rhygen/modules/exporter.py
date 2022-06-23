@@ -29,15 +29,16 @@ class Exporter:
         if directory is None:
             directory = os.getcwd()
 
+        original_path = os.path.join(directory, 'score_uncropped.png')
         path = os.path.join(directory, 'score.png')
 
         try:
-            abjad.persist.as_png(score, path, remove_ly=True, resolution=250, flags='--png -dcrop', **kwargs)
+            abjad.persist.as_png(score, original_path, remove_ly=True, resolution=250, flags='--png -dcrop', **kwargs)
         except AttributeError:
             pass
 
-        if 'flags' in kwargs and '-dcrop' in kwargs['flags']:
-            path = path[:-4] + '.cropped.png'
+        cropped_path = original_path[:-4] + '.cropped.png'
+        os.rename(cropped_path, path)
 
         return path
 
