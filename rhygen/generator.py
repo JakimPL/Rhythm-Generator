@@ -1,7 +1,8 @@
-import abjad
 import random
 from fractions import Fraction
-from typing import List
+from typing import List, Optional
+
+import abjad
 
 from rhygen.modules import misc
 from rhygen.modules.conversion import to_abjad_score
@@ -13,18 +14,18 @@ from rhygen.modules.settings import Settings
 class RhythmGenerator:
     def __init__(self, settings: Settings = None):
         self.settings = settings if settings is not None else Settings()
-        self.__cache: None
+        self._cache: Optional[List[Phrase]] = None
 
     def __call__(self) -> abjad.Score:
-        self.__cache = self.__generate_score()
-        return to_abjad_score(self.__cache, time_signature=self.settings.time_signature)
+        self._cache = self._generate_score()
+        return to_abjad_score(self._cache, time_signature=self.settings.time_signature)
 
-    def __generate_measure(self, group_id: int) -> Phrase:
+    def _generate_measure(self, group_id: int) -> Phrase:
         group_settings = self.settings.group_settings(group_id)
         phrases = group_settings.get_all_phrases()
 
         remainder = Fraction(*self.settings.time_signature)
-        validation_message = self.__validate(phrases, remainder)
+        validation_message = self._validate(phrases, remainder)
         if validation_message:
             raise InvalidPhraseSetError('invalid set of notes/phrases, {message}'.format(
                 message=validation_message))
@@ -38,17 +39,17 @@ class RhythmGenerator:
             remainder -= length
 
         random.shuffle(elements)
-        measure = self.__flatten(elements)
+        measure = self._flatten(elements)
         return measure
 
-    def __generate_group(self, group_id: int) -> Phrase:
-        return sum([self.__generate_measure(group_id) for _ in range(self.settings.measures)], Phrase())
+    def _generate_group(self, group_id: int) -> Phrase:
+        return sum([self._generate_measure(group_id) for _ in range(self.settings.measures)], Phrase())
 
-    def __generate_score(self) -> List[Phrase]:
-        return [self.__generate_group(group_id) for group_id in range(self.settings.groups)]
+    def _generate_score(self) -> List[Phrase]:
+        return [self._generate_group(group_id) for group_id in range(self.settings.groups)]
 
     @staticmethod
-    def __validate(phrases: List[Phrase], remainder: Fraction) -> str:
+    def _validate(phrases: List[Phrase], remainder: Fraction) -> str:
         gcd = Fraction(
             misc.gcd([phrase.length.numerator for phrase in phrases] + [remainder.numerator]),
             misc.lcm([phrase.length.denominator for phrase in phrases] + [remainder.denominator])
@@ -63,7 +64,7 @@ class RhythmGenerator:
         return ''
 
     @staticmethod
-    def __flatten(phrases: List[Phrase]) -> Phrase:
+    def _flatten(phrases: List[Phrase]) -> Phrase:
         measure = Phrase([])
         for phrase in phrases:
             measure.notes += phrase.notes
@@ -71,4 +72,4 @@ class RhythmGenerator:
 
     @property
     def cache(self) -> List[Phrase]:
-        return self.__cache
+        return self._cache

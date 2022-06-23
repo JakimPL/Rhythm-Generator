@@ -1,7 +1,8 @@
-import abjad
 import math
 import os
 from typing import List, Callable
+
+import abjad
 
 
 def func(integers: List[int], f: Callable) -> int:
@@ -50,6 +51,16 @@ def save_score(score: abjad.Score, directory: str = None, **kwargs) -> str:
 
     if 'flags' in kwargs and '-dcrop' in kwargs['flags']:
         path = path[:-4] + '.cropped.png'
+
+    return path
+
+
+def export_midi(score: abjad.Score, directory: str = None, **kwargs) -> str:
+    if directory is None:
+        directory = os.getcwd()
+
+    path = '{directory}/score.mid'.format(directory=directory)
+    abjad.persist.as_midi(score, path, **kwargs)
 
     return path
 
