@@ -18,7 +18,11 @@ class RhythmGenerator:
 
     def __call__(self) -> abjad.Score:
         self._cache = self._generate_score()
-        return to_abjad_score(self._cache, time_signature=self.settings.time_signature)
+        return to_abjad_score(
+            self._cache,
+            time_signature=self.settings.time_signature,
+            tempo=self.settings.tempo
+        )
 
     def _generate_measure(self, group_id: int) -> Phrase:
         group_settings = self.settings.group_settings(group_id)
